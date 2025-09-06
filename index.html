@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D & IT Career Point Matrix Calculator</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --primary-light: #34495e;
+            --secondary: #e74c3c;
+            --secondary-light: #f86f5d;
+            --accent: #3498db;
+            --text-light: #ecf0f1;
+            --text-dark: #2c3e50;
+            --bg-light: #f5f7fa;
+            --bg-dark: #2c3e50;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        header {
+            /* background: linear-gradient(135deg, var(--primary), var(--primary-light)); */
+            /* color: var(--text-light); */
+            color: #2c3e50;
+            text-align: center;
+            padding: 2rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .brand {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .author {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            color: var(--primary);
+            margin: 2rem 0;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background-color: var(--secondary);
+        }
+        
+        .matrix-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .matrix-box {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            flex: 1;
+            min-width: 300px;
+            max-width: 500px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .matrix-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .matrix-title {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 0.5rem;
+        }
+        
+        .matrix-grid {
+            display: grid;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .matrix-2x2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .matrix-3x3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            text-align: center;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .calculate-btn {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            width: 100%;
+            margin: 1rem 0;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        
+        .calculate-btn:hover {
+            background-color: var(--secondary-light);
+            transform: scale(1.05);
+        }
+        
+        .calculate-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .result-display {
+            background-color: var(--primary-light);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.2rem;
+            min-height: 100px;
+            margin-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .information {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background-color: rgba(52, 152, 219, 0.1);
+            border-radius: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+            background-color: var(--primary);
+            color: var(--text-light);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .matrix-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .matrix-box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 20px;">
+            <img src="logo-removebg-preview.png" alt="D & IT Career Point Logo" style="height: 150px; width: auto;">
+            <div>
+                <div class="brand">D & IT Career Point</div>
+                <div class="author">By Adarsh Sahu</div>
+                <div class="tagline">We believe learning together</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <section id="matrix-2x2">
+            <h2 class="section-title">Matrix Operations (2×2)</h2>
+            <div class="matrix-container">
+                <div class="matrix-box">
+                    <h3 class="matrix-title">Matrix A</h3>
+                    <div class="matrix-grid matrix-2x2">
+                        <input type="number" id="a1" placeholder="a11">
+                        <input type="number" id="a2" placeholder="a12">
+                        <input type="number" id="b1" placeholder="b11">
+                        <input type="number" id="b2" placeholder="b12">
+                    </div>
+                </div>
+
+                <div class="matrix-box">
+                    <h3 class="matrix-title">Matrix B</h3>
+                    <div class="matrix-grid matrix-2x2">
+                        <input type="number" id="A1" placeholder="A11">
+                        <input type="number" id="A2" placeholder="A12">
+                        <input type="number" id="B1" placeholder="B11">
+                        <input type="number" id="B2" placeholder="B12">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="information">
+                <h3>This formula is more useful for students</h3>
+            </div>
+            
+            <button onclick="solvMatrix2x2()" class="calculate-btn">
+                Calculate Matrix Multiplication
+            </button>
+            
+            <div class="result-display" id="dis">
+                The result will be displayed here
+            </div>
+        </section>
+
+        <section id="matrix-3x3">
+            <h2 class="section-title">Matrix Operations (3×3)</h2>
+            <div class="matrix-container">
+                <div class="matrix-box">
+                    <h3 class="matrix-title">Matrix A</h3>
+                    <div class="matrix-grid matrix-3x3">
+                        <input type="number" id="a" placeholder="a11">
+                        <input type="number" id="b" placeholder="a12">
+                        <input type="number" id="c" placeholder="a13">
+                        <input type="number" id="d" placeholder="a21">
+                        <input type="number" id="e" placeholder="a22">
+                        <input type="number" id="f" placeholder="a23">
+                        <input type="number" id="g" placeholder="a31">
+                        <input type="number" id="h" placeholder="a32">
+                        <input type="number" id="i" placeholder="a33">
+                    </div>
+                </div>
+
+                <div class="matrix-box">
+                    <h3 class="matrix-title">Matrix B</h3>
+                    <div class="matrix-grid matrix-3x3">
+                        <input type="number" id="j" placeholder="b11">
+                        <input type="number" id="k" placeholder="b12">
+                        <input type="number" id="l" placeholder="b13">
+                        <input type="number" id="m" placeholder="b21">
+                        <input type="number" id="n" placeholder="b22">
+                        <input type="number" id="o" placeholder="b23">
+                        <input type="number" id="p" placeholder="b31">
+                        <input type="number" id="q" placeholder="b32">
+                        <input type="number" id="r" placeholder="b33">
+                    </div>
+                </div>
+            </div>
+            
+            <button onclick="solvMatrix3x3()" class="calculate-btn">
+                Calculate Matrix Multiplication
+            </button>
+            
+            <div class="result-display" id="display">
+                The result will be displayed here
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        &copy; 2025 D & IT Career Point - All Rights Reserved
+    </footer>
+
+    <script>
+        function solvMatrix2x2() {
+            var a = parseFloat(document.getElementById("a1").value) || 0;
+            var b = parseFloat(document.getElementById("a2").value) || 0;
+            var c = parseFloat(document.getElementById("b1").value) || 0;
+            var d = parseFloat(document.getElementById("b2").value) || 0;
+
+            var e = parseFloat(document.getElementById("A1").value) || 0;
+            var f = parseFloat(document.getElementById("A2").value) || 0;
+            var g = parseFloat(document.getElementById("B1").value) || 0;
+            var h = parseFloat(document.getElementById("B2").value) || 0;
+
+            var resultA = (a * e) + (b * g);
+            var resultB = (a * f) + (b * h);
+            var resultC = (c * e) + (d * g);
+            var resultD = (c * f) + (d * h);
+
+            var resultHTML = `
+                <div style="text-align: center">
+                    <p style="font-size: 1.2rem; margin-bottom: 10px">Result Matrix:</p>
+                    <div style="display: inline-block; border-left: 2px solid white; border-right: 2px solid white; padding: 0 15px;">
+                        <p>${resultA} &nbsp;&nbsp; ${resultB}</p>
+                        <p>${resultC} &nbsp;&nbsp; ${resultD}</p>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById("dis").innerHTML = resultHTML;
+        }
+
+        function solvMatrix3x3() {
+            var a = parseFloat(document.getElementById("a").value) || 0;
+            var b = parseFloat(document.getElementById("b").value) || 0;
+            var c = parseFloat(document.getElementById("c").value) || 0;
+            var d = parseFloat(document.getElementById("d").value) || 0;
+            var e = parseFloat(document.getElementById("e").value) || 0;
+            var f = parseFloat(document.getElementById("f").value) || 0;
+            var g = parseFloat(document.getElementById("g").value) || 0;
+            var h = parseFloat(document.getElementById("h").value) || 0;
+            var i = parseFloat(document.getElementById("i").value) || 0;
+
+            var j = parseFloat(document.getElementById("j").value) || 0;
+            var k = parseFloat(document.getElementById("k").value) || 0;
+            var l = parseFloat(document.getElementById("l").value) || 0;
+            var m = parseFloat(document.getElementById("m").value) || 0;
+            var n = parseFloat(document.getElementById("n").value) || 0;
+            var o = parseFloat(document.getElementById("o").value) || 0;
+            var p = parseFloat(document.getElementById("p").value) || 0;
+            var q = parseFloat(document.getElementById("q").value) || 0;
+            var r = parseFloat(document.getElementById("r").value) || 0;
+
+            
+            var ea = ((a * j) + (b * m) + (c * p));
+            var eb = ((a * k) + (b * n) + (c * q));
+            var ec = ((a * l) + (b * o) + (c * r));
+            var ed = ((d * j) + (e * m) + (f * p));
+            var ee = ((d * k) + (e * n) + (f * q));
+            var ef = ((d * l) + (e * o) + (f * r));
+            var eg = ((g * j) + (h * m) + (i * p));
+            var eh = ((g * k) + (h * n) + (i * q));
+            var ei = ((g * l) + (h * o) + (i * r));
+
+            var resultHTML = `
+                <div style="text-align: center">
+                    <p style="font-size: 1.2rem; margin-bottom: 10px">Result Matrix:</p>
+                    <div style="display: inline-block; border-left: 2px solid white; border-right: 2px solid white; padding: 0 15px;">
+                        <p>${ea} &nbsp;&nbsp; ${eb} &nbsp;&nbsp; ${ec}</p>
+                        <p>${ed} &nbsp;&nbsp; ${ee} &nbsp;&nbsp; ${ef}</p>
+                        <p>${eg} &nbsp;&nbsp; ${eh} &nbsp;&nbsp; ${ei}</p>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById("display").innerHTML = resultHTML;
+        }
+    </script>
+</body>
+</html>
